@@ -1,0 +1,124 @@
+exporting
+- post single view (no children)
+- post whole document
+- post view with children recursively (posting document is a special case of this)
+- view structure can change
+- exporting metadata for project, volume, tags
+-- should warn user if there are changes on the web that hasn't been committed, based on latest version (it's ok to have old versions uncommitted)
+-- user can override warning and just force the db to reflect what's in the model
+-- check if there are uncommitted info first, ask user if ok, then post for change after user oks it
+
+
+importing
+- import single view
+- import whole document
+- import view with children recursively
+-- structure should not have changed (what if user changed the document structure in model but never published to docweb?)
+-- show user what's different and prompt to change the model
+-- assume changes are committed once user accepts them?
+
+comments
+- comments are always attached to latest version of views
+- import/export comments separately?
+
+json examples:
+posting views:
+if force=true, forces the db to reflect the model, else look for uncommitted changes and prompt user first
+all documentation/text will have starting and ending html and body tags stripped out - done by docgen plugin
+posting single view:
+/views/viewid?force=true
+{ views: [{ mdid: magicdrawid, 
+  			contains: [{type: paragraph/image, source: magicdrawid(source element id), useProperty: documentation/name/etc}, {type: paragraph, source: text, text: blah},
+  						{type: table, sources: [magicdraw element ids], table: {
+  										title: "title"
+  										header: [[{text: "text", colspan: "", rowspan: ""}, {text: "text"}], ...]:
+  										body: [[{source: magicdraw id, useProperty: name/doc/value, colspan: "", rowspan: ""}, {source: text, text: "text", colspan: "", rowspan: ""}], [{source: text, text: ""}, {}]]
+  										}
+  						},
+  						{type: image, source: magicdraw id}
+  						] 
+  		}], 
+  elements: [{mdid: magicdrawid, name: name, documentation: blah, type: type, image: url, value: defalt value}]
+}
+the elements key contains all relevant elements to the view, including views themselves
+
+posting view with children:
+/views/viewid?recurse=true&force=true
+{ views: [{ this can be one view with the same contents as the single view json}, {...}, ...],
+  view2view: {viewid: [viewid, viewid,...], viewid: [viewid, ...], ...},
+  elements: same as above
+}
+
+posting document:
+/views/viewid?doc=true&recurse=true&force=true
+{ same as view with children (document view is a view),
+  are any more things needed?
+}
+
+response if model elements changed on web haven't been committed:
+[{mdid: magicdrawelementid, name: changedname, doc: changeddoc, etc:...}]
+
+only give back what hasn't been committed, let user decide if accept, if yes, assume user will commit and change the above to committed
+if no, post the current info, make a history, and mark current as committed
+history nodes are blank nodes, all view/model elements should have mdid as as property
+posting to /views/committed
+[mdid, mdid, ...]
+this is just to tell the db to mark all the mdid as committed (when user imported things)
+
+posting only md element changes (these will be marked as committed):
+[{mdid: mdid, name: name, doc: doc},...]
+
+
+importing:
+/views/viewid?changes=true&recurse=true
+changes=true means only show the things that're uncommitted from web interface
+[{mdid: magicdrawid, name: blah, doc: blah, etc: ...}]
+if user accepts all changes, post another set of mdid to mark as committed
+in either case, submit a set of ids to mark as committed based on what changes have been imported
+
+/views/viewid?recurse=true
+(this probably will never get used because only changes=true is really useful right now)
+{
+	views: [  {mdid: id, contains: [{type: blah, source: source id, useProperty: doc/name},],
+	view2view: {viewid: [viewid, viewid],
+	elements: {mdid: {name: name, doc:doc, etc}, mdid: {},  }
+}
+
+
+comments on web:
+view display is done by actual sections, but comments can be attached to nosection views in md: can group comment to the immediate view that's a section
+ppl on web comment based on the view they see (a section) new comments will be attached to the page's view
+when exporting comments from md, all comments attached to nosections would implcitly be attached to the parent view section
+comments attached to comments indicate nesting (reply to parent comment) they don't have to be explicitly attached to a view
+comments made in md should have date and user as stereotype tags (ViewComment stereotype, make property listener to listen on anchor?)
+comment made in web doesn't have an mdid: should set mdid to none, use blank node?? or create uuid so it can be referenced
+
+getting comments:
+user should really do a project update first
+/views/viewid/comments?recurse=true
+{ view2comment: {viewid:[randomid and commentmdids], ...} //the viewid here are those that are sections
+  comments: [{id: randomidormdid, body: body, author: user, modified: datetime, committed: true}],
+  comment2comment: {commentOrrandomid: [childids], ...}
+}
+when md gets this response:
+collect nonimported ids - create them under the head view and keep track of the id mappings, do not attach them to anything yet
+web created ids will be like this "commentxxxxx"
+parse the view comments - see if there's a mapping for newly created commetns, get the comment, attach it to the right view and move them if needed (if comment is already in md and attached to some other view that's a nosection, should not move it)
+parse comment2comment - attach comments to comments and move if needed
+if found commentid that has an mdid that's not in md:
+	did user delete it? what to do? probably ignore for now? so no comment can ever be deleted from docweb
+if found md comment existing but different body: check timestamp: if web timestamp is higher, use web
+for newly created comemnts: send the mapping back to database so it can update the ids
+
+posting comments:
+/views/viewid/comments?recurse=true
+{
+	view2comment: {viewid:[mdid], ...} //the viewid here are those that are sections
+  	comments: [{id: mdid, body: body, author: user, modified: datetime}],
+  	comment2comment: {commentid: [childids], ...}
+}
+when web gets this:
+add all the comments - if already exists and is different, check modified time, will author change?
+attach the views - do not unattach any views, only add if necessary
+
+magicdraw's comment annotation is whack..if annotating another comment, the direction si reversed

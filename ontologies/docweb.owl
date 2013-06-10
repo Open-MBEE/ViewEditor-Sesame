@@ -1,0 +1,612 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://docgen.jpl.nasa.gov/ontologies/docweb#"
+     xml:base="http://docgen.jpl.nasa.gov/ontologies/docweb"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#author -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#author">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#User"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#comments -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#comments">
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Comment"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#contains -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#contains">
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ContainerElement"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NonContainerElement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#documents -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#documents">
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#DocumentView"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Volume"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#first -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#first">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;IrreflexiveProperty"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#lastModifiedBy -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#lastModifiedBy">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#User"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#mounts -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#mounts">
+        <rdf:type rdf:resource="&owl;IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#TWModule"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#TWModule"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#next -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#next">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#oldVersion -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#oldVersion">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdf:type rdf:resource="&owl;IrreflexiveProperty"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#replies -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#replies">
+        <rdf:type rdf:resource="&owl;IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Comment"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Comment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#sources -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#sources">
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Source"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#tags -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#tags">
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Tag"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#views -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#views">
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#volumes -->
+
+    <owl:ObjectProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#volumes">
+        <rdfs:range rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Volume"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#VolumeContainer"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#body -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#body">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Table"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#caption -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#caption">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#CaptionedElement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#commit -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#commit">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Comment"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#committed -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#committed">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#defaultValue -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#defaultValue">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Property"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#deleted -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#deleted">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Comment"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#documentation -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#documentation">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#header -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#header">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Table"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#index -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#index">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Orderable"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#lastModified -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#lastModified">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#mdid -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#mdid">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#modified -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#modified">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#name -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#name">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#style -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#style">
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Table"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#text -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#text">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Text"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#title -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#title">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#TitledElement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#useProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#useProperty">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#username -->
+
+    <owl:DatatypeProperty rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#username">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#User"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#CaptionedElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#CaptionedElement">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#PresentationElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Comment -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Comment">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#ContainerElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#ContainerElement">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Orderable"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#PresentationElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Diagram -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Diagram">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#DiagramView -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#DiagramView">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Diagram"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#DocumentView -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#DocumentView">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#View"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Image -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Image">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#CaptionedElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NonContainerElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#TitledElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#PresentationElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#List -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#List">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NonContainerElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Source"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ModelElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#NonContainerElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#NonContainerElement">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Orderable"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#PresentationElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Orderable -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Orderable"/>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Paragraph -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Paragraph">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NonContainerElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#PresentationElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#PresentationElement"/>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Project -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Project">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#VolumeContainer"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Property -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Property">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Source -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Source"/>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#TWModule -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#TWModule">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#TWServer -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#TWServer">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Table -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Table">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#CaptionedElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#LeafElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NonContainerElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#TitledElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Tag -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Tag">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Text -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Text">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#Source"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#TitledElement -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#TitledElement">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#PresentationElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#User -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#User"/>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#View -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#View">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#ContainerElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#Volume -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#Volume">
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#NamedElement"/>
+        <rdfs:subClassOf rdf:resource="http://docgen.jpl.nasa.gov/ontologies/docweb#VolumeContainer"/>
+    </owl:Class>
+    
+
+
+    <!-- http://docgen.jpl.nasa.gov/ontologies/docweb#VolumeContainer -->
+
+    <owl:Class rdf:about="http://docgen.jpl.nasa.gov/ontologies/docweb#VolumeContainer"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
+
