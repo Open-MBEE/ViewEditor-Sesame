@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
-        <uri id="Automatically generated entry, Timestamp=1358190062674" name="http://docgen.jpl.nasa.gov/ontologies/docweb" uri="docweb.owl"/>
+    <group id="Folder_Repository_directory_recursive_true_Auto-Update_true_version_2" prefer="public" xml:base="">
+        <uri id="Automatically_generated_entry_Timestamp_1358190062674" name="http://docgen.jpl.nasa.gov/ontologies/docweb" uri="docweb.owl"/>
     </group>
 </catalog>
