@@ -4,6 +4,7 @@ import gov.nasa.jpl.docweb.concept.DocumentView;
 import gov.nasa.jpl.docweb.concept.Project;
 import gov.nasa.jpl.docweb.concept.URI;
 import gov.nasa.jpl.docweb.concept.Volume;
+import gov.nasa.jpl.docweb.services.ProjectService;
 import gov.nasa.jpl.docweb.spring.LocalConnectionFactory;
 
 import java.util.HashMap;
@@ -37,7 +38,10 @@ public class ProjectResource {
 	@Autowired
 	private LocalConnectionFactory<ObjectConnection> connectionFactory;	
 	
-	private static Logger log = Logger.getLogger(ViewResource.class.getName());
+	@Autowired
+	private ProjectService projectService;
+	
+	private static Logger log = Logger.getLogger(ProjectResource.class.getName());
 	
 	/**
 	 * <p>accepts body:</p>
@@ -64,17 +68,17 @@ public class ProjectResource {
 		ObjectConnection oc = connectionFactory.getCurrentConnection();
 		log.info("posting project " + pid + ": \n" + body);
 		JSONObject posted = (JSONObject)(new JSONParser()).parse(body);
-		Project proj = getOrCreateProject(oc, pid, (String)posted.get("name"));
+		Project proj = projectService.getOrCreateProject(oc, pid, (String)posted.get("name"));
 		JSONObject volumes = (JSONObject)posted.get("volumes");
 		Map<String, Volume> volumemap = new HashMap<String, Volume>();
 		for (String vid: (Set<String>)volumes.keySet()) {
-			Volume v = getOrCreateVolume(oc, vid, (String)volumes.get(vid));
+			Volume v = projectService.getOrCreateVolume(oc, vid, (String)volumes.get(vid));
 			volumemap.put(vid, v);
 		}
 		JSONArray documents = (JSONArray)posted.get("documents");
 		Map<String, DocumentView> documentmap = new HashMap<String, DocumentView>();
 		for (Object did: documents) {
-			DocumentView dv = getOrCreateDocument(oc, (String)did);
+			DocumentView dv = projectService.getOrCreateDocument(oc, (String)did);
 			documentmap.put((String)did, dv);
 		}
 		JSONObject v2v = (JSONObject)posted.get("volume2volumes");
@@ -109,40 +113,5 @@ public class ProjectResource {
 		return "ok";//Response.status(200).build();
 	}
 	
-	private DocumentView getOrCreateDocument(ObjectConnection oc, String did) throws RepositoryException, QueryEvaluationException {
-		DocumentView dv = null;
-		try {
-			dv = oc.getObject(DocumentView.class, URI.DATA + did);
-		} catch (ClassCastException e) {
-			dv = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + did, DocumentView.class), DocumentView.class);
-			dv.setMdid(did);
-			dv.setName("Unexported Document");
-		} 
-		return dv;
-	}
-	
-	private Volume getOrCreateVolume(ObjectConnection oc, String vid, String vname) throws RepositoryException, QueryEvaluationException {
-		Volume v = null;
-		try {
-			v = oc.getObject(Volume.class, URI.DATA + vid);
-		} catch (ClassCastException e) {
-			v = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + vid, Volume.class), Volume.class);
-			v.setMdid(vid);
-		} 
-		v.setName(vname);
-		return v;
-	}
-	
-	private Project getOrCreateProject(ObjectConnection oc, String pid, String pname) throws RepositoryException, QueryEvaluationException {
-		Project v = null;
-		try {
-			v = oc.getObject(Project.class, URI.DATA + pid);
-		} catch (ClassCastException e) {
-			v = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + pid, Project.class), Project.class);
-			v.setMdid(pid);
-		} 
-		v.setName(pname);
-		return v;
-	}
 	
 }

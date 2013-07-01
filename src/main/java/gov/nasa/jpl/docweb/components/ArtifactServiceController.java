@@ -28,7 +28,7 @@ public class ArtifactServiceController {
 	@Autowired
 	ServletContext sc;
 
-	private static Logger log = Logger.getLogger(ViewController.class.getName());
+	private static Logger log = Logger.getLogger(ArtifactServiceController.class.getName());
 
 	/**
 	 * Passes request to artifact_upload.jsp that has the upload GUI

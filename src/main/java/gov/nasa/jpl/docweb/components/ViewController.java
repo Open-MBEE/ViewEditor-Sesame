@@ -16,6 +16,10 @@ import gov.nasa.jpl.docweb.concept.User;
 import gov.nasa.jpl.docweb.concept.Util;
 import gov.nasa.jpl.docweb.concept.View;
 import gov.nasa.jpl.docweb.resources.ViewResource;
+import gov.nasa.jpl.docweb.services.CommentService;
+import gov.nasa.jpl.docweb.services.ProjectService;
+import gov.nasa.jpl.docweb.services.UserService;
+import gov.nasa.jpl.docweb.services.ViewService;
 import gov.nasa.jpl.docweb.spring.LocalConnectionFactory;
 
 import java.security.Principal;
@@ -63,6 +67,18 @@ public class ViewController {
 	@Autowired
 	private LocalConnectionFactory<ObjectConnection> connectionFactory;	
 	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private CommentService commentService;
+	
+	@Autowired
+	private ProjectService projectService;
+	
+	@Autowired
+	private ViewService viewService;
+	
 	private static Logger log = Logger.getLogger(ViewController.class.getName());
 	
 	@Transactional(readOnly=true)
@@ -80,7 +96,7 @@ public class ViewController {
 		else
 			parentDoc = v.getParentDocument().iterator().next();
 		Project project = parentDoc.getProject().iterator().next();
-		HomeController.addProjects(model, oc);
+		model.addAttribute("projects", projectService.getProjects(oc));
 		model.addAttribute("projectId", project.getMdid());
 		model.addAttribute("viewParentIds", parents); //this is for opening the nav tree
 		model.addAttribute("viewName", v.getName());
@@ -112,10 +128,10 @@ public class ViewController {
 		JSONArray elements = (JSONArray)(new JSONParser()).parse(body);
 		for (Object o: elements) {
 			JSONObject jo = (JSONObject)o;
-			updateModelElement(jo, oc);
+			viewService.updateModelElement(jo, oc);
 		}
 		View v = oc.getObject(View.class, URI.DATA + view);
-		User u = ViewResource.getOrCreateUser(user, oc);
+		User u = userService.getOrCreateUser(user, oc);
 		v.setLastModifiedBy(u);
 		v.setLastModified(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)GregorianCalendar.getInstance()));
 		return "ok";
@@ -134,74 +150,10 @@ public class ViewController {
 		comment.put("author", user);
 		comment.put("modified", Util.DATEFORMAT.format(new Date()));
 		comment.put("id", "comment" + UUID.randomUUID().toString().replace('-', '_'));
-		Comment com = ViewResource.updateOrCreateComment(comment, oc);
+		Comment com = commentService.updateOrCreateComment(comment, oc);
 		com.setCommitted(false);
 		viewOb.addComment(com);
 		return "redirect:/ui/views/" + view;
-	}
-	
-	private void updateModelElement(JSONObject e, ObjectConnection oc) throws RepositoryException, QueryEvaluationException {
-		String id = (String)e.get("mdid");
-		ModelElement res = null;
-		try {
-			res = oc.getObject(ModelElement.class, URI.DATA + id);
-		} catch (ClassCastException ex) {
-			return;
-		}
-		String name = null;
-		if (res instanceof NamedElement)
-			name = ((NamedElement)res).getName();
-		String doc = res.getDocumentation();
-		String dvalue = "";
-		if (res instanceof Property) {
-			dvalue = ((Property)res).getDefaultValue();
-		}
-		if ((e.containsKey("name") && name == null || e.containsKey("name") && !name.equals((String)e.get("name"))) ||
-			(e.containsKey("documentation") && !doc.equals((String)e.get("documentation"))) ||
-			(e.containsKey("dvalue") && dvalue == null || e.containsKey("dvalue") && !dvalue.equals((String)e.get("dvalue")))) {
-			RDFObject old = oc.getObjectFactory().createObject();
-			ModelElement oldv = null;
-			if (res instanceof View)
-				oldv = oc.addDesignation(old, View.class);
-			else if (res instanceof Property)
-				oldv = oc.addDesignation(old, Property.class);
-			else if (res instanceof Comment)
-				oldv = oc.addDesignation(old, Comment.class);
-			else
-				oldv = oc.addDesignation(old, NamedElement.class);
-			oldv.setMdid(id);
-			oldv.setDocumentation(doc);
-			if (oldv instanceof NamedElement)
-				((NamedElement)oldv).setName(name);
-			oldv.setCommitted(res.getCommitted());
-			oldv.setModified(res.getModified());
-			oldv.setOldVersion(res.getOldVersion());
-			if (oldv instanceof Property)
-				((Property)oldv).setDefaultValue(((Property)res).getDefaultValue());
-			res.setOldVersion(oldv);
-			
-			if (e.containsKey("name"))
-				((NamedElement)res).setName((String)e.get("name"));
-			if (e.containsKey("documentation"))
-				res.setDocumentation((String)e.get("documentation"));
-			if (e.containsKey("dvalue"))
-				((Property)res).setDefaultValue((String)e.get("dvalue"));
-			res.setCommitted(false);
-			res.setMdid(id);
-			try {
-				res.setModified(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)GregorianCalendar.getInstance()));
-			} catch (DatatypeConfigurationException e1) {
-				e1.printStackTrace();
-			}
-		}
-		if (res instanceof View && ((View)res).getContains().isEmpty()) {			
-			RDFObject blah = oc.getObjectFactory().createObject();
-			Paragraph p = oc.addDesignation(blah, Paragraph.class);
-			p.addSource(res);
-			p.setUseProperty("DOCUMENTATION");
-			p.setIndex(0);
-			((View)res).addContainedElement(p);
-		}
 	}
 	
 	private void addViewDetail(View view, Model model, ObjectConnection oc) throws RepositoryException, QueryEvaluationException {
