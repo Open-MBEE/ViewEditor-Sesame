@@ -254,14 +254,14 @@ Search View Name: <input id="docnavsearch" type="text" size="15"/>
 <c:forEach var="element" items="${viewDetail}">
 	<c:choose>
 	<c:when test="${element['type'] == 'doc'}">
-		<div class="editable">
+		<div class="editable editable-doc">
 		<div class="docinput" id="${element['mdid']}-doc">
 		${element["documentation"]}
 		</div>
 		</div>
 	</c:when>
 	<c:when test="${element['type'] == 'name'}">
-		<div class="editable">
+		<div class="editable editable-name">
 		<span class="display ${element['mdid']}-name_display">${element["name"]}</span>
 		<c:if test="${element['edit'] == 'true'}">
 		<input class="hidden textinput" id="${element['mdid']}-name" type="text" value="${element['name']}"/>

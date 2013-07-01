@@ -11,14 +11,14 @@
 			<${celltag} rowspan="${bodyEntry['rowspan']}" colspan="${bodyEntry['colspan']}">
 				<c:choose>
 					<c:when test="${bodyEntry['type'] == 'doc'}">
-						<div class="editable">
+						<div class="editable editable-doc">
 						<div class="docinput" id="${bodyEntry['mdid']}-doc">
 							${bodyEntry["documentation"]}
 						</div>
 						</div>
 					</c:when>
 					<c:when test="${bodyEntry['type'] == 'name'}">
-						<div class="editable">
+						<div class="editable editable-name">
 						<span class="display ${bodyEntry['mdid']}-name_display">${bodyEntry["name"]}</span>
 						<c:if test="${bodyEntry['edit'] == 'true'}">
 						<input class="hidden textinput" id="${bodyEntry['mdid']}-name" type="text" value="${bodyEntry['name']}" size="15"/>
@@ -29,7 +29,7 @@
 						${bodyEntry["text"]}
 					</c:when>
 					<c:when test="${bodyEntry['type'] == 'dvalue'}">
-						<div class="editable">
+						<div class="editable editable-dvalue">
 						<span class="display ${bodyEntry['mdid']}-dvalue_display">${bodyEntry["dvalue"]}</span>
 						<c:if test="${bodyEntry['edit'] == 'true'}">
 						<input class="hidden textinput" id="${bodyEntry['mdid']}-dvalue" type="text" value="${bodyEntry['dvalue']}" size="10"/>
