@@ -38,7 +38,7 @@ public class ViewService {
 
 	/**
 	 * 
-	 * @param e {"mdid": mdid, "name": name, "documentation": blah, "type": View/...}
+	 * @param e {"mdid": mdid, "name": name, "documentation": blah, "type": View/Comment/Property, ("dvalue": dvalue)}
 	 * @param oc
 	 * @return
 	 * @throws RepositoryException
@@ -183,7 +183,7 @@ public class ViewService {
 	
 	/**
 	 * 
-	 * @param view {"mdid": mdid, "noSection": true/false, "contains": [{"type": paragraph/..., "source": mdid, "sourceProperty": documentation/name/..}, ...]}
+	 * @param view {"mdid": mdid, "noSection": true/false, "contains": [(see createContainedElement)]}
 	 * @param oc
 	 * @return
 	 * @throws RepositoryException
@@ -227,7 +227,8 @@ public class ViewService {
 	}
 	
 	/**
-	 * @param o {"type": Paragraph/..., "source": mdid, "useProperty": DOCUMENTATION/NAME/..}
+	 * @param o {"type": Paragraph, "source": mdid/"text", "useProperty": "DOCUMENTATION/NAME/DVALUE", ("text": "stuff")} OR
+	 * 			{"type": "Table", "sources": [mdid], "title": title, "body": [[{"source": mdid/"text", "useProperty": "DOCUMENTATION/NAME/DVALUE", ("text": "stuff")}]], "header": (see body), "style": style}
 	 * @param index
 	 * @param oc
 	 * @return

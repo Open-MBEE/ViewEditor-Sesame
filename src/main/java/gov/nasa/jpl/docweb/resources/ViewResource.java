@@ -135,9 +135,9 @@ public class ViewResource {
 	/**
 	 * <p>accepts body:</p>
 	 * <p>{
-	 *		"views": [{"mdid": mdid, "contains": [{"type": "Paragraph/...", "source": mdid, "useProperty": doc/name},...],
+	 *		"views": [see ViewService.updateOrCreateView],
 	 *		"view2view": {viewid: [viewid, ...], ...},
-	 *		"elements": [{"mdid": mdid, "name": name, "documentation":doc, ...}, ... ]
+	 *		"elements": [see ViewService.updateOrCreateModelElement]
 	 *	}</p>
 	 * @param viewid
 	 * @param body
