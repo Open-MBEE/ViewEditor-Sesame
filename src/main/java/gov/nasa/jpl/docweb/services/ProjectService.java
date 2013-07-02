@@ -44,6 +44,26 @@ public class ProjectService {
 		return v;
 	}
 	
+	public Volume getVolume(ObjectConnection oc, String vid) throws RepositoryException, QueryEvaluationException {
+		Volume v = null;
+		try {
+			v = oc.getObject(Volume.class, URI.DATA + vid);
+			return v;
+		} catch (ClassCastException e) {
+			return null;
+		} 
+	}
+	
+	public Project getProject(ObjectConnection oc, String vid) throws RepositoryException, QueryEvaluationException {
+		Project v = null;
+		try {
+			v = oc.getObject(Project.class, URI.DATA + vid);
+			return v;
+		} catch (ClassCastException e) {
+			return null;
+		} 
+	}
+	
 	public Project getOrCreateProject(ObjectConnection oc, String pid, String pname) throws RepositoryException, QueryEvaluationException {
 		Project v = null;
 		try {

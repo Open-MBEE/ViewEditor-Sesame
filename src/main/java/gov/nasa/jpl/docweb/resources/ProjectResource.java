@@ -64,7 +64,7 @@ public class ProjectResource {
 	@Transactional
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/{projectid}", method=RequestMethod.POST)
-	public @ResponseBody String postProject(@PathVariable("projectid") String pid, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException, DatatypeConfigurationException {
+	public @ResponseBody String postProject(@PathVariable("projectid") String pid, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException {
 		ObjectConnection oc = connectionFactory.getCurrentConnection();
 		log.info("posting project " + pid + ": \n" + body);
 		JSONObject posted = (JSONObject)(new JSONParser()).parse(body);
@@ -95,13 +95,14 @@ public class ProjectResource {
 		JSONObject v2d = (JSONObject)posted.get("volume2documents");
 		for (String vid: (Set<String>)v2d.keySet()) {
 			Volume fromV = volumemap.get(vid);
-			Set<DocumentView> childDs = new HashSet<DocumentView>();
+			//Set<DocumentView> childDs = new HashSet<DocumentView>();
 			for (Object did: (JSONArray)v2d.get(vid)) {
 				DocumentView cd = documentmap.get((String)did);
 				cd.clearVolumes();
-				childDs.add(cd);
+				fromV.addDocument(cd);
+				//childDs.add(cd);
 			}
-			fromV.setDocuments(childDs);
+			//fromV.setDocuments(childDs);
 		}
 		Set<Volume> projectVolumes = new HashSet<Volume>();
 		for (Object vid: (JSONArray)posted.get("projectVolumes")) {
@@ -113,5 +114,29 @@ public class ProjectResource {
 		return "ok";//Response.status(200).build();
 	}
 	
+	@Transactional
+	@RequestMapping(value="/document/{docid}", method=RequestMethod.POST)
+	public @ResponseBody String postDocument(@PathVariable("docid") String did, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException {
+		ObjectConnection oc = connectionFactory.getCurrentConnection();
+		log.info("posting document volume " + did + ": \n" + body);
+		DocumentView dv = projectService.getOrCreateDocument(oc, (String)did);
+		Volume v = projectService.getVolume(oc, body);
+		if (v == null)
+			return "NotFound";
+		dv.clearVolumes();
+		v.addDocument(dv);
+		return "ok";
+	}
 	
+	@Transactional
+	@RequestMapping(value="/{projectid}/delete", method=RequestMethod.POST)
+	public @ResponseBody String deleteProject(@PathVariable("projectid") String pid) throws RepositoryException, QueryEvaluationException {
+		ObjectConnection oc = connectionFactory.getCurrentConnection();
+		log.info("delete project " + pid);
+		Project proj = projectService.getProject(oc, pid);
+		if (proj == null)
+			return "NotFound";
+		proj.delete();
+		return "ok";
+	}
 }
