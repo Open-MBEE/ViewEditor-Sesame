@@ -96,7 +96,7 @@ public class ViewResource {
 			} else
 				return viewService.getViewJSON(v, recurse).toJSONString();
 		} catch (ClassCastException e) {
-			return "{}";
+			return "NotFound";
 		}
 	}
 	
@@ -144,7 +144,7 @@ public class ViewResource {
 	 * @param force forces the database to look like the model, if not and there's any uncommitted changes, will return changed elements instead
 	 * @param recurse whether there's a view2view key in the body
 	 * @param doc whether the viewid is a DocumentView
-	 * @return
+	 * @return "ok" or [{"mdid": mdid, "type": "name"/"doc"}] if stuff have been merged, or "uncommitted changes" if there are changes and force is false
 	 * @throws RepositoryException
 	 * @throws ParseException
 	 * @throws QueryEvaluationException
@@ -173,7 +173,7 @@ public class ViewResource {
 				v = oc.addDesignation(me, View.class);
 			JSONArray changed = viewService.getChangedElements(v, recurse);
 			if (!changed.isEmpty() && !force)
-				return changed.toJSONString();
+				return "uncommitted changes";
 		} catch (ClassCastException e) {				
 			if (doc) {
 				DocumentView v = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + viewid, DocumentView.class), DocumentView.class);

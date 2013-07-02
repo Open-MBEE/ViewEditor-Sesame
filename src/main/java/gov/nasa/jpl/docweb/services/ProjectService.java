@@ -27,6 +27,7 @@ public class ProjectService {
 			dv = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + did, DocumentView.class), DocumentView.class);
 			dv.setMdid(did);
 			dv.setName("Unexported Document");
+			dv.setCommitted(true);
 		} 
 		return dv;
 	}
