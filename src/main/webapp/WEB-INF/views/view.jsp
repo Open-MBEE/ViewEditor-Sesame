@@ -209,6 +209,14 @@ $(document).ready(function(){
 		tinyMCE.execCommand("mceToggleEditor", true, id + "-body");
 		$('#'+ id + '-edit-submit').toggleClass('hidden');
 	});
+	
+	$('#addCommentForm').submit(function(e) {
+		if (curedit) {
+			alert("You're currently editing the view! Save your view first! (you'll lose your comment)");
+			return false;
+		}
+		return true;
+	});
 });
 </script>
 <title>${viewName}</title>
