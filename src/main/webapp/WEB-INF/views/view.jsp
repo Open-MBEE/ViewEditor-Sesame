@@ -256,7 +256,9 @@ Search View Name: <input id="docnavsearch" type="text" size="15"/>
 <button id="toggleEdit">Edit</button><button id="save">Save</button><button id="cancel">Cancel</button><span id="lastModified">  Last saved/exported by ${lastUser} at ${lastModified}</span><br/>
 <br/>
 <c:if test="${fn:length(viewDetail) == 0}">
+		<div class="editable editable-doc">
 		<div class="docinput" id="${viewId}-doc"> 
+		</div>
 		</div>
 </c:if>
 <c:forEach var="element" items="${viewDetail}">
