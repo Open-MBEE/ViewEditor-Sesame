@@ -49,31 +49,23 @@ Your queries have no pure docbook tags - for example, you're not using docbook t
 Things the view editor doesn't do right now:</p>
 <ul>
 <li>
-Show diagrams (placeholder text will be shown in parentheses)
-</li>
-<li>
 edit elements that don't come from some magicdraw element's name, documentation, or property default value
-</li>
-<li>
-if you have a PropertiesTableByAttributes in your queries, it'll look the same as magicdraw pop up gui table - it will not show documentation or stereotype properties
 </li>
 <li>
 have role/ldap group based permissions - right now any jpl us person can access this site and its views
 </li>
-<li>
-other things, feature list/request <a href="https://jplwiki.jpl.nasa.gov:8443/display/OpsRev/Editable+table+and+view+editor+notes">here</a>
-</li>
-
 </ul>
+<p>Color codes:</p>
+<p class="editable-name">Editable element names will be surrounded with a blue border</p>
+<p class="editable-doc">Editable element documentation will be surrounded with a red border</p>
+<p class="editable-dvalue">Editable property defualt values will be surrounded with a green border</p>
 
-<p>Some advice on current workflow:</p>
+<p>Some advice on workflow:</p>
 <ul>
 <li>The import/export functions from DocGen plugin work at the magicdraw element level - if some view references an element, that element's name/documentation/default value will all be exported/imported together. 
 Therefore, it's not advisable to have two people editing the same element or view from different tools. For example, If person A is editing the documentation of an element online, person B should not be editing its name in magicdraw. It's ok to edit the name online.</li>
 <li>Two people should not be editing the same view online at the same time. Whoever saves last will win.</li>
-<li>The above is also applicable to individual elements. Because the views only reference the underlying element, if an element documentation shows up in different views and two people are editing the same documentation in different views, whoever saves last will win with respect to that documentation. The upside means that element that shows up in different places will always show the latest content.</li>
 <li>If you only want to change the view hierarchy order, export view hierarchy only and not the whole view. It's also best to do it at the document level.</li>
-<li>When importing views from magicdraw, the elements it import are based on what the views online are referencing. So if you want to change what the views contain in magicdraw, do an import first, change the views around, than do an export. It's possible to have a mismatch between what the model view is referencing vs. what the editor view is referencing.</li>
 <li>In general, always do an import first before export. Doing an export without the "force" option will also check for available imports first</li>
 <li>If you export anyway when there's some changes online that hasn't been imported, conflicting element names and documentation will be merged online and you'll have to resolve it.</li>
 <li>If your view and the elements it references are in different modules, you may need to lock across shares to do imports...</li>

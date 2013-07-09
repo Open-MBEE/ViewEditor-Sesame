@@ -16,7 +16,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/tiny_mce/tiny_mce.js"></script>
 <script language="javascript" type="text/javascript">
 var curedit = false;
-
+var addingComment = false;
 tinyMCE.init({
 	theme : "advanced",
     mode : "none",
@@ -54,6 +54,10 @@ tinyMCE.init({
 
 $(document).ready(function(){
 	$('#toggleEdit').click(function() {
+		if (addingComment) {
+			alert("You're currently adding a comment! Save the comment first!");
+			return;
+		}
 		$(".docinput").each(function(index, el) {
 			tinyMCE.execCommand("mceToggleEditor", true, el.id);
 		});
@@ -177,9 +181,14 @@ $(document).ready(function(){
     });
 
 	$('#addComment').click(function() {
+		if (curedit) {
+			alert("You're currently editing the view! Save your view first!");
+			return;
+		}
 		$('#addCommentForm').toggleClass("hidden");
 		tinyMCE.execCommand("mceToggleEditor", true, "addCommentTextArea");
 		$('#addComment').toggleClass("hidden");
+		addingComment = true;
 	});
 	$('.comment-remove').click(function() {
 		var id = $(this).attr('id').split('-')[0];
@@ -209,6 +218,7 @@ $(document).ready(function(){
 		tinyMCE.execCommand("mceToggleEditor", true, id + "-body");
 		$('#'+ id + '-edit-submit').toggleClass('hidden');
 	});
+	
 });
 </script>
 <title>${viewName}</title>
@@ -248,20 +258,22 @@ Search View Name: <input id="docnavsearch" type="text" size="15"/>
 <button id="toggleEdit">Edit</button><button id="save">Save</button><button id="cancel">Cancel</button><span id="lastModified">  Last saved/exported by ${lastUser} at ${lastModified}</span><br/>
 <br/>
 <c:if test="${fn:length(viewDetail) == 0}">
+		<div class="editable editable-doc">
 		<div class="docinput" id="${viewId}-doc"> 
+		</div>
 		</div>
 </c:if>
 <c:forEach var="element" items="${viewDetail}">
 	<c:choose>
 	<c:when test="${element['type'] == 'doc'}">
-		<div class="editable">
+		<div class="editable editable-doc">
 		<div class="docinput" id="${element['mdid']}-doc">
 		${element["documentation"]}
 		</div>
 		</div>
 	</c:when>
 	<c:when test="${element['type'] == 'name'}">
-		<div class="editable">
+		<div class="editable editable-name">
 		<span class="display ${element['mdid']}-name_display">${element["name"]}</span>
 		<c:if test="${element['edit'] == 'true'}">
 		<input class="hidden textinput" id="${element['mdid']}-name" type="text" value="${element['name']}"/>

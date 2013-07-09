@@ -5,8 +5,12 @@ import gov.nasa.jpl.docweb.concept.URI;
 import gov.nasa.jpl.docweb.concept.View;
 import gov.nasa.jpl.docweb.spring.LocalConnectionFactory;
 
+import java.util.GregorianCalendar;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -96,13 +100,14 @@ public class CommentResource {
 	
 	@Transactional
 	@RequestMapping(value="/{commentid}", method=RequestMethod.POST)
-	public @ResponseBody String postComment(@PathVariable("commentid") String commentid, @RequestBody String body) throws RepositoryException, QueryEvaluationException {
+	public @ResponseBody String postComment(@PathVariable("commentid") String commentid, @RequestBody String body) throws RepositoryException, QueryEvaluationException, DatatypeConfigurationException {
 		ObjectConnection oc = connectionFactory.getCurrentConnection();;
 		log.info("posting comment " + commentid);
 		try {
 			Comment e = oc.getObject(Comment.class, URI.DATA + commentid);
 			e.setDocumentation(body);
 			e.setCommitted(false);
+			e.setModified(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)GregorianCalendar.getInstance()));
 		} catch (ClassCastException e) {
 			log.info("comment " + commentid + " not found! will not set delete");
 		}

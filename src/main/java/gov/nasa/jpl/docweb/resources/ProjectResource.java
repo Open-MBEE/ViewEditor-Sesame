@@ -4,6 +4,7 @@ import gov.nasa.jpl.docweb.concept.DocumentView;
 import gov.nasa.jpl.docweb.concept.Project;
 import gov.nasa.jpl.docweb.concept.URI;
 import gov.nasa.jpl.docweb.concept.Volume;
+import gov.nasa.jpl.docweb.services.ProjectService;
 import gov.nasa.jpl.docweb.spring.LocalConnectionFactory;
 
 import java.util.HashMap;
@@ -37,7 +38,10 @@ public class ProjectResource {
 	@Autowired
 	private LocalConnectionFactory<ObjectConnection> connectionFactory;	
 	
-	private static Logger log = Logger.getLogger(ViewResource.class.getName());
+	@Autowired
+	private ProjectService projectService;
+	
+	private static Logger log = Logger.getLogger(ProjectResource.class.getName());
 	
 	/**
 	 * <p>accepts body:</p>
@@ -60,21 +64,21 @@ public class ProjectResource {
 	@Transactional
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/{projectid}", method=RequestMethod.POST)
-	public @ResponseBody String postProject(@PathVariable("projectid") String pid, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException, DatatypeConfigurationException {
+	public @ResponseBody String postProject(@PathVariable("projectid") String pid, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException {
 		ObjectConnection oc = connectionFactory.getCurrentConnection();
 		log.info("posting project " + pid + ": \n" + body);
 		JSONObject posted = (JSONObject)(new JSONParser()).parse(body);
-		Project proj = getOrCreateProject(oc, pid, (String)posted.get("name"));
+		Project proj = projectService.getOrCreateProject(oc, pid, (String)posted.get("name"));
 		JSONObject volumes = (JSONObject)posted.get("volumes");
 		Map<String, Volume> volumemap = new HashMap<String, Volume>();
 		for (String vid: (Set<String>)volumes.keySet()) {
-			Volume v = getOrCreateVolume(oc, vid, (String)volumes.get(vid));
+			Volume v = projectService.getOrCreateVolume(oc, vid, (String)volumes.get(vid));
 			volumemap.put(vid, v);
 		}
 		JSONArray documents = (JSONArray)posted.get("documents");
 		Map<String, DocumentView> documentmap = new HashMap<String, DocumentView>();
 		for (Object did: documents) {
-			DocumentView dv = getOrCreateDocument(oc, (String)did);
+			DocumentView dv = projectService.getOrCreateDocument(oc, (String)did);
 			documentmap.put((String)did, dv);
 		}
 		JSONObject v2v = (JSONObject)posted.get("volume2volumes");
@@ -91,13 +95,14 @@ public class ProjectResource {
 		JSONObject v2d = (JSONObject)posted.get("volume2documents");
 		for (String vid: (Set<String>)v2d.keySet()) {
 			Volume fromV = volumemap.get(vid);
-			Set<DocumentView> childDs = new HashSet<DocumentView>();
+			//Set<DocumentView> childDs = new HashSet<DocumentView>();
 			for (Object did: (JSONArray)v2d.get(vid)) {
 				DocumentView cd = documentmap.get((String)did);
 				cd.clearVolumes();
-				childDs.add(cd);
+				fromV.addDocument(cd);
+				//childDs.add(cd);
 			}
-			fromV.setDocuments(childDs);
+			//fromV.setDocuments(childDs);
 		}
 		Set<Volume> projectVolumes = new HashSet<Volume>();
 		for (Object vid: (JSONArray)posted.get("projectVolumes")) {
@@ -109,40 +114,41 @@ public class ProjectResource {
 		return "ok";//Response.status(200).build();
 	}
 	
-	private DocumentView getOrCreateDocument(ObjectConnection oc, String did) throws RepositoryException, QueryEvaluationException {
-		DocumentView dv = null;
-		try {
-			dv = oc.getObject(DocumentView.class, URI.DATA + did);
-		} catch (ClassCastException e) {
-			dv = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + did, DocumentView.class), DocumentView.class);
-			dv.setMdid(did);
-			dv.setName("Unexported Document");
-		} 
-		return dv;
+	@Transactional
+	@RequestMapping(value="/document/{docid}", method=RequestMethod.POST)
+	public @ResponseBody String postDocument(@PathVariable("docid") String did, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException {
+		ObjectConnection oc = connectionFactory.getCurrentConnection();
+		log.info("posting document volume " + did + ": \n" + body);
+		DocumentView dv = projectService.getOrCreateDocument(oc, (String)did);
+		Volume v = projectService.getVolume(oc, body);
+		if (v == null)
+			return "NotFound";
+		dv.clearVolumes();
+		v.addDocument(dv);
+		return "ok";
 	}
 	
-	private Volume getOrCreateVolume(ObjectConnection oc, String vid, String vname) throws RepositoryException, QueryEvaluationException {
-		Volume v = null;
-		try {
-			v = oc.getObject(Volume.class, URI.DATA + vid);
-		} catch (ClassCastException e) {
-			v = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + vid, Volume.class), Volume.class);
-			v.setMdid(vid);
-		} 
-		v.setName(vname);
-		return v;
+	@Transactional
+	@RequestMapping(value="/document/{docid}/delete", method=RequestMethod.POST)
+	public @ResponseBody String deleteDocument(@PathVariable("docid") String did, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException {
+		ObjectConnection oc = connectionFactory.getCurrentConnection();
+		log.info("deleting document " + did );
+		DocumentView dv = projectService.getDocument(oc, did);
+		if (dv == null)
+			return "NotFound";
+		dv.clearVolumes();
+		return "ok";
 	}
 	
-	private Project getOrCreateProject(ObjectConnection oc, String pid, String pname) throws RepositoryException, QueryEvaluationException {
-		Project v = null;
-		try {
-			v = oc.getObject(Project.class, URI.DATA + pid);
-		} catch (ClassCastException e) {
-			v = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + pid, Project.class), Project.class);
-			v.setMdid(pid);
-		} 
-		v.setName(pname);
-		return v;
+	@Transactional
+	@RequestMapping(value="/{projectid}/delete", method=RequestMethod.POST)
+	public @ResponseBody String deleteProject(@PathVariable("projectid") String pid) throws RepositoryException, QueryEvaluationException {
+		ObjectConnection oc = connectionFactory.getCurrentConnection();
+		log.info("delete project " + pid);
+		Project proj = projectService.getProject(oc, pid);
+		if (proj == null)
+			return "NotFound";
+		proj.delete();
+		return "ok";
 	}
-	
 }

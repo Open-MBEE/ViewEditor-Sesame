@@ -43,7 +43,7 @@ public class SesameRepositoryProvider implements RepositoryProvider, Initializin
 		
 		try {
 			RepositoryManager rm = org.openrdf.repository.manager.RepositoryProvider.getRepositoryManager(new File(loc));
-			Repository repo = rm.getRepository("editor");
+			Repository repo = rm.getRepository("staging");
 			if (!repo.isInitialized()) {
 				repo.initialize();
 			}

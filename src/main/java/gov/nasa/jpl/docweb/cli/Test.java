@@ -8,6 +8,7 @@ import gov.nasa.jpl.docweb.concept.URI;
 import gov.nasa.jpl.docweb.concept.User;
 import gov.nasa.jpl.docweb.concept.View;
 import gov.nasa.jpl.docweb.resources.ViewResource;
+import gov.nasa.jpl.docweb.services.UserService;
 
 import java.io.File;
 import java.util.GregorianCalendar;
@@ -90,7 +91,7 @@ public class Test {
 			
 			oc = op.getConnection();
 			oc.setAutoCommit(false);
-			User u = ViewResource.getOrCreateUser("blah", oc);
+			User u = (new UserService()).getOrCreateUser("blah", oc);
 			for (User user: oc.getObjects(User.class).asList()) {
 				System.out.println(user.getUserName());
 			}
