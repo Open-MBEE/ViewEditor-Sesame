@@ -16,6 +16,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 /**
  * Artifact service that handles file uploads
  * @author cinyoung
+ * 
+ * Testing git change
  *
  */
 @Controller
@@ -57,6 +59,13 @@ public class ArtifactServiceController {
 	    			}
 	
 	                String saveDirectory = sc.getRealPath("/") + path;
+	                // check that the directory exists
+	                File saveDirFile = new File(saveDirectory);
+	                if (!saveDirFile.exists()) {
+	                	log.info("creating save directory: " + saveDirectory);
+	                	saveDirFile.mkdirs();
+	                }
+	                
 	                log.info("saving file: " + saveDirectory + aFile.getOriginalFilename());
 	                if (!aFile.getOriginalFilename().equals("")) {
 	                    aFile.transferTo(new File(saveDirectory + aFile.getOriginalFilename()));
@@ -105,11 +114,12 @@ public class ArtifactServiceController {
 	 * @return
 	 */
 	public boolean isValidPath(String path) {
-		File file = new File(sc.getRealPath("/") + path);
-		if (file.getAbsolutePath().indexOf(ARTIFACT_DIR) >= 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return true;
+//		File file = new File(sc.getRealPath("/") + path);
+//		if (file.getAbsolutePath().indexOf(ARTIFACT_DIR) >= 0) {
+//			return true;
+//		} else {
+//			return false;
+//		}
 	}
 }
