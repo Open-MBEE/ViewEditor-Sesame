@@ -26,11 +26,11 @@
             user-search-filter="(&amp;(uid={0})(jplusperson=yes))"
             />
             
-        <authentication-provider>
+       <authentication-provider>
         	<user-service>
             <user name="admin" password="admin" authorities="ROLE_ADMIN" />
         	</user-service>
-    	</authentication-provider>
+    	</authentication-provider> 
     </authentication-manager>
     
     <ldap-server url="ldaps://ldap.jpl.nasa.gov" />
