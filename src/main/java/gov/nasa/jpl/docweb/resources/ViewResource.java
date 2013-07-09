@@ -94,7 +94,8 @@ public class ViewResource {
 			if (changed) {
 				return viewService.getChangedElements(v, recurse).toJSONString();
 			} else
-				return viewService.getViewJSON(v, recurse).toJSONString();
+				return viewService.getViewElements(v, recurse).toJSONString();
+				//return viewService.getViewJSON(v, recurse).toJSONString();
 		} catch (ClassCastException e) {
 			return "NotFound";
 		}
@@ -171,9 +172,9 @@ public class ViewResource {
 				v = (View)me;
 			else
 				v = oc.addDesignation(me, View.class);
-			JSONArray changed = viewService.getChangedElements(v, recurse);
-			if (!changed.isEmpty() && !force)
-				return "uncommitted changes";
+			//JSONArray changed = viewService.getChangedElements(v, recurse);
+			//if (!changed.isEmpty() && !force)
+				//return "uncommitted changes";
 		} catch (ClassCastException e) {				
 			if (doc) {
 				DocumentView v = oc.addDesignation(oc.getObjectFactory().createObject(URI.DATA + viewid, DocumentView.class), DocumentView.class);
@@ -185,7 +186,7 @@ public class ViewResource {
 		Set<String> merged = new HashSet<String>();
 		for (Object e: elements) {
 			JSONObject me = (JSONObject)e;
-			viewService.updateOrCreateModelElement(me, oc, merged);
+			viewService.updateOrCreateModelElement(me, oc, merged, force);
 		}
 		JSONArray views = (JSONArray)view.get("views");
 		for (Object v: views) {

@@ -152,6 +152,18 @@ public interface View extends NamedElement, ContainerElement {
 	
 	@Sparql(URI.PREFIX + 
 			"SELECT ?e WHERE " + 
+			"{ $this docweb:contains/docweb:sources ?e .\n" +
+			"  ?e rdf:type/rdfs:subClassOf* docweb:ModelElement . }")
+	public Set<ModelElement> getModelElements();
+	
+	@Sparql(URI.PREFIX + 
+			"SELECT ?e WHERE " + 
+			"{ $this docweb:views*/docweb:contains/docweb:sources ?e .\n" +
+			"  ?e rdf:type/rdfs:subClassOf* docweb:ModelElement . }")
+	public Set<ModelElement> getModelElementsRecursive();
+	
+	@Sparql(URI.PREFIX + 
+			"SELECT ?e WHERE " + 
 			"{ $this docweb:comments/docweb:replies* ?e .\n" +
 			"  ?e docweb:committed false . }")
 	public Set<Comment> getUncommittedComments();

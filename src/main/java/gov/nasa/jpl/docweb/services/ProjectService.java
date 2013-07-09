@@ -32,6 +32,16 @@ public class ProjectService {
 		return dv;
 	}
 	
+	public DocumentView getDocument(ObjectConnection oc, String did) throws RepositoryException, QueryEvaluationException {
+		DocumentView dv = null;
+		try {
+			dv = oc.getObject(DocumentView.class, URI.DATA + did);
+		} catch (ClassCastException e) {
+			return null;
+		} 
+		return dv;
+	}
+	
 	public Volume getOrCreateVolume(ObjectConnection oc, String vid, String vname) throws RepositoryException, QueryEvaluationException {
 		Volume v = null;
 		try {

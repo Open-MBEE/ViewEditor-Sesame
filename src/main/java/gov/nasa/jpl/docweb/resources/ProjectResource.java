@@ -129,6 +129,18 @@ public class ProjectResource {
 	}
 	
 	@Transactional
+	@RequestMapping(value="/document/{docid}/delete", method=RequestMethod.POST)
+	public @ResponseBody String deleteDocument(@PathVariable("docid") String did, @RequestBody String body) throws RepositoryException, ParseException, QueryEvaluationException {
+		ObjectConnection oc = connectionFactory.getCurrentConnection();
+		log.info("deleting document " + did );
+		DocumentView dv = projectService.getDocument(oc, did);
+		if (dv == null)
+			return "NotFound";
+		dv.clearVolumes();
+		return "ok";
+	}
+	
+	@Transactional
 	@RequestMapping(value="/{projectid}/delete", method=RequestMethod.POST)
 	public @ResponseBody String deleteProject(@PathVariable("projectid") String pid) throws RepositoryException, QueryEvaluationException {
 		ObjectConnection oc = connectionFactory.getCurrentConnection();

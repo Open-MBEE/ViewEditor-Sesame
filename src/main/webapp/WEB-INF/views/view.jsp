@@ -16,7 +16,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/tiny_mce/tiny_mce.js"></script>
 <script language="javascript" type="text/javascript">
 var curedit = false;
-
+var addingComment = false;
 tinyMCE.init({
 	theme : "advanced",
     mode : "none",
@@ -54,6 +54,10 @@ tinyMCE.init({
 
 $(document).ready(function(){
 	$('#toggleEdit').click(function() {
+		if (addingComment) {
+			alert("You're currently adding a comment! Save the comment first!");
+			return;
+		}
 		$(".docinput").each(function(index, el) {
 			tinyMCE.execCommand("mceToggleEditor", true, el.id);
 		});
@@ -177,9 +181,14 @@ $(document).ready(function(){
     });
 
 	$('#addComment').click(function() {
+		if (curedit) {
+			alert("You're currently editing the view! Save your view first!");
+			return;
+		}
 		$('#addCommentForm').toggleClass("hidden");
 		tinyMCE.execCommand("mceToggleEditor", true, "addCommentTextArea");
 		$('#addComment').toggleClass("hidden");
+		addingComment = true;
 	});
 	$('.comment-remove').click(function() {
 		var id = $(this).attr('id').split('-')[0];
@@ -210,13 +219,6 @@ $(document).ready(function(){
 		$('#'+ id + '-edit-submit').toggleClass('hidden');
 	});
 	
-	$('#addCommentForm').submit(function(e) {
-		if (curedit) {
-			alert("You're currently editing the view! Save your view first! (you'll lose your comment)");
-			return false;
-		}
-		return true;
-	});
 });
 </script>
 <title>${viewName}</title>

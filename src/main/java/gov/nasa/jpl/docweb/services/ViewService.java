@@ -1,6 +1,7 @@
 package gov.nasa.jpl.docweb.services;
 
 import gov.nasa.jpl.docweb.concept.Comment;
+import gov.nasa.jpl.docweb.concept.DocumentView;
 import gov.nasa.jpl.docweb.concept.ModelElement;
 import gov.nasa.jpl.docweb.concept.NamedElement;
 import gov.nasa.jpl.docweb.concept.NonContainerElement;
@@ -45,7 +46,7 @@ public class ViewService {
 	 * @throws QueryEvaluationException
 	 * @throws DatatypeConfigurationException
 	 */
-	public ModelElement updateOrCreateModelElement(JSONObject e, ObjectConnection oc, Set<String> merged) throws RepositoryException, QueryEvaluationException, DatatypeConfigurationException {
+	public ModelElement updateOrCreateModelElement(JSONObject e, ObjectConnection oc, Set<String> merged, boolean force) throws RepositoryException, QueryEvaluationException, DatatypeConfigurationException {
 		String id = (String)e.get("mdid");
 		ModelElement res = null;
 		boolean n = false;
@@ -95,19 +96,35 @@ public class ViewService {
 				res.setOldVersion(oldv);
 			}
 			boolean committed = true;
-			if (!res.getCommitted() && name != null && !name.equals((String)e.get("name"))) {
-				((NamedElement)res).setName(name + " - MERGED - " + (String)e.get("name"));
+			if ((!res.getCommitted() || force) && name != null && !name.equals((String)e.get("name"))) {
+				if (force)
+					((NamedElement)res).setName((String)e.get("name"));
+				else {
+					((NamedElement)res).setName(name + " - MERGED - " + (String)e.get("name"));
+					committed = false;
+				}
 				merged.add(id + "-name");
-				committed = false;
 			} else if (res instanceof NamedElement)
 				((NamedElement)res).setName((String)e.get("name"));
-			if (!res.getCommitted() && res.getDocumentation() != null && !res.getDocumentation().equals((String)e.get("documentation"))) {
-				res.setDocumentation(res.getDocumentation() + " <p><strong><i> MERGED - NEED RESOLUTION! </i></strong></p> " + (String)e.get("documentation"));
+			if ((!res.getCommitted() || force) && res.getDocumentation() != null && !res.getDocumentation().equals((String)e.get("documentation"))) {
+				if (force)
+					res.setDocumentation((String)e.get("documentation"));
+				else {
+					res.setDocumentation(res.getDocumentation() + " <p><strong><i> MERGED - NEED RESOLUTION! </i></strong></p> " + (String)e.get("documentation"));
+					committed = false;
+				}
 				merged.add(id + "-doc");
-				committed = false;
 			} else
 				res.setDocumentation((String)e.get("documentation"));
-			if (res instanceof Property && e.containsKey("dvalue"))
+			if ((!res.getCommitted() || force) && res instanceof Property && e.containsKey("dvalue") && dvalue != null && !dvalue.equals(e.get("dvalue"))) {
+				if (force)
+					((Property)res).setDefaultValue((String)e.get("dvalue"));
+				else {
+					((Property)res).setDefaultValue(dvalue + " - MERGED - " + (String)e.get("dvalue"));
+					committed = false;
+				}
+				merged.add(id + "-dvalue");
+			} else if (res instanceof Property && e.containsKey("dvalue"))
 				((Property)res).setDefaultValue((String)e.get("dvalue"));
 			
 			res.setCommitted(committed);
@@ -326,6 +343,9 @@ public class ViewService {
 						e.put("documentation", ((ModelElement)s).getDocumentation());
 						if (s instanceof NamedElement)
 							e.put("name", ((NamedElement)s).getName());
+						if (s instanceof Property) {
+							e.put("dvalue", ((Property)s).getDefaultValue());
+						}
 						e.put("mdid", uuid);
 						elements.put(uuid, e);
 					}
@@ -361,5 +381,29 @@ public class ViewService {
 		return changed;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public JSONArray getViewElements(View v, boolean recurse) {
+		Set<ModelElement> res = null;
+		JSONArray changed = new JSONArray();
+		if (recurse)
+			res = v.getModelElementsRecursive();
+		else
+			res = v.getModelElements();
+		if (v instanceof DocumentView)
+			res.add(v);
+		for (ModelElement me: res) {
+			JSONObject element = new JSONObject();
+			if (me instanceof NamedElement) {
+				element.put("name", ((NamedElement)me).getName());
+			}
+			if (me instanceof Property) {
+				element.put("dvalue", ((Property)me).getDefaultValue());
+			}
+			element.put("mdid", me.getMdid());
+			element.put("documentation", me.getDocumentation());
+			changed.add(element);
+		}
+		return changed;
+	}
 	
 }
