@@ -24,7 +24,8 @@
 		if (url.val() && url.val().length > 0) {
 			var filename = url.val().replace('C:\\fakepath\\', '');
 			var path = $('#path').val();// + '/';
-			var baseURL = document.URL.replace('artifact\/upload', 'artifacts');
+			//var baseURL = document.URL.replace('artifact\/upload', 'artifacts');
+			var baseURL = document.URL.replace('artifact\/upload', '');
 			var save = true;
 
 			if ($('a[rel="' + path + filename + '"]').length > 0) {
