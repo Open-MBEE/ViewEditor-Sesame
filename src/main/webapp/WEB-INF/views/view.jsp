@@ -64,12 +64,16 @@ function inlineImg() {
 		}
 		if (content.indexOf("[image]") != -1) {
 			$(imglink).remove();
-			$(this).html(content.replace('[image]', '<img src="/editor/images/docgen/' + eid + '_latest.svg"/>'));
+			$(this).html(content.replace('[image]', '<img src="/' + env + '/images/docgen/' + eid + '_latest.svg"/>'));
 		}
 	});
 }
 
 $(document).ready(function(){
+	$("img[src*='/editor/images/docgen/']").each(function() {
+		var src = $(this).attr('src').replace('editor', env);
+		$(this).attr('src', src);
+	});
 	inlineImg();
 	
 	$('#toggleEdit').click(function() {
