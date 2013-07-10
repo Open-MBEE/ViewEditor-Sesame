@@ -17,6 +17,8 @@
 <script language="javascript" type="text/javascript">
 var curedit = false;
 var addingComment = false;
+var env = window.location.pathname.split('/')[1];
+
 tinyMCE.init({
 	theme : "advanced",
     mode : "none",
@@ -51,8 +53,25 @@ tinyMCE.init({
     }
 });
 
+function inlineImg() {
+	$('.docinput').each(function(index, el) {
+		var eid = $(this).attr('id').split('-')[0];
+		var content = $(this).html();
+		var imglink = "img[src='/" + env + "/images/docgen/" + eid + "_latest.svg']";
+		var imglinks = $(this).find(imglink);
+		if (imglinks.length != 0) {
+			$(imglink).not(imglinks).remove();
+		}
+		if (content.indexOf("[image]") != -1) {
+			$(imglink).remove();
+			$(this).html(content.replace('[image]', '<img src="/editor/images/docgen/' + eid + '_latest.svg"/>'));
+		}
+	});
+}
 
 $(document).ready(function(){
+	inlineImg();
+	
 	$('#toggleEdit').click(function() {
 		if (addingComment) {
 			alert("You're currently adding a comment! Save the comment first!");
@@ -69,6 +88,7 @@ $(document).ready(function(){
 				$('.' + el.id + "_display").html($(el).val());
 			});
 			$(this).html("Edit");
+			inlineImg();
 		} else {
 		    $(this).html("Preview");
 		}
