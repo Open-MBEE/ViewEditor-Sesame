@@ -43,6 +43,7 @@ tinyMCE.init({
     valid_elements: "a[href],p,ul,ol,li,sup,sub,table[class|border|cellspacing|cellpadding|frame],tr,td[colspan|rowspan],span[style],th,caption,strong,b,s,i,u,strike,pre,img[src|alt|height|width]",
     width: '600',
     relative_urls : false,
+    convert_urls : false,
     formats: {
     	italic: {inline: 'i'},
     	bold: {inline: 'strong'},
