@@ -71,6 +71,13 @@ function inlineImg() {
 }
 
 $(document).ready(function(){
+	$(window).bind('beforeunload', function() {
+		if (curedit) {
+			return "You're currently editing the view!";
+		} else if (addingComment) {
+			return "You're currently editing a comment!";
+		}
+	});
 	$("img[src*='/editor/images/docgen/']").each(function() {
 		var src = $(this).attr('src').replace('editor', env);
 		$(this).attr('src', src);
