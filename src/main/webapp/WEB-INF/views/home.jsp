@@ -57,7 +57,7 @@ have role/ldap group based permissions - right now any jpl us person can access 
 </ul>
 <p>Color codes:</p>
 <p class="editable-name">Editable element names will be surrounded with a blue border</p>
-<p class="editable-doc">Editable element documentation will be surrounded with a red border</p>
+<p class="editable-doc">Editable element documentation will be surrounded with a black border</p>
 <p class="editable-dvalue">Editable property defualt values will be surrounded with a green border</p>
 
 <p>Some advice on workflow:</p>
