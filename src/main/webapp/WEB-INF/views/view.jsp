@@ -27,8 +27,8 @@ tinyMCE.init({
     font_size_style_values : "10px,12px,13px,14px,16px,18px,20px",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
-    theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,strikethrough,separator,bullist,numlist,outdent,indent,sup,sub,separator,link,unlink,separator,cleanup,help,separator,code,spellchecker,pastetext,pasteword",
-    theme_advanced_buttons2 : "tablecontrols,backcolor,charmap,separator,image",
+    theme_advanced_buttons1 : "undo,redo,|,bold,italic,underline,strikethrough,|,bullist,numlist,outdent,indent,sup,sub,|,link,unlink,|,cleanup,removeformat,help,|,code,spellchecker,pastetext,pasteword",
+    theme_advanced_buttons2 : "styleselect,|,tablecontrols,backcolor,charmap,|,image,code,selectall,",
     theme_advanced_resizing : true,
     entity_encoding:"named",
     entities: "",
@@ -51,7 +51,16 @@ tinyMCE.init({
     	bold: {inline: 'strong'},
     	underline: {inline: 'u'},
     	strikethrough: {inline: 's'}
-    }
+    },
+    style_formats : [
+                     {title : 'Header 1', block : 'h1'},
+                     {title : 'Header 2', block : 'h2'},
+                     {title : 'Header 3', block : 'h3'},
+                     {title : 'Header 4', block : 'h4'},
+                     {title : 'Header 5', block : 'h5'},
+                     {title : 'Header 6', block : 'h6'},
+                     {title : 'Paragraph', block : 'p'},
+             ] ,
 });
 
 function inlineImg() {
