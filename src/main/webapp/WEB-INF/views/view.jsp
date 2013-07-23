@@ -186,7 +186,7 @@ $(document).ready(function(){
 			error: function(jqXHR, textStatus, errorThrown) {alert("not saved: " + errorThrown);}
 		});
 	});
-	$('#cancel').click(function() {location.reload();});
+	$('#cancel').click(function() {curedit = false; addingComment = false; location.reload();});
 	$('#docnavwrapper').jstree({
 		"plugins": ["themes", "html_data", "search", "ui"],
 		"core": {
@@ -231,6 +231,7 @@ $(document).ready(function(){
 		$('#addComment').toggleClass("hidden");
 		addingComment = true;
 	});
+	$('#addCommentForm').submit(function() {addingComment = false; return true;});
 	$('.comment-remove').click(function() {
 		var id = $(this).attr('id').split('-')[0];
 		$.ajax({
