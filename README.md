@@ -34,7 +34,7 @@ This is a web app that provides a sandbox for people to edit select Magicdraw mo
 	* modify the namespaces so that a 'docweb' prefix corresponds to http://docgen.jpl.nasa.gov/ontologies/docweb#
 1. shutdown Tomcat
 1. add a '-Dsesame.rep={your sesame data}/openrdf-sesame' to the CATALINA_OPTS (the sesame.rep is how view editor gets the data dir)
-1. create the view editor war (export from eclipse or maven install, if maven, the war will be in /target)
+1. create the view editor war (export from eclipse or maven install, if maven, the war will be in target/)
 1. install the war into Tomcat's webapp dir
 1. start Tomcat
 1. go to http://localhost:8080/manager/html
@@ -44,3 +44,11 @@ This is a web app that provides a sandbox for people to edit select Magicdraw mo
 	
 # Exporting and importing via magicdraw
 * see the MDK documentation and manual on the modeling patterns and DocGen pattern, import and export options are built into MDK plugin for Magicdraw
+
+# Limitations
+* last write wins, there's no locking or conflict detection internally, users need to plan workflow around this
+* can only edit name, documentation, default value model properties
+* coordination from MDK documented in MDK manual
+
+# Import/Export interfaces
+* TODO
