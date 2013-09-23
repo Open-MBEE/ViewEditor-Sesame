@@ -91,7 +91,9 @@ table.merchecklist, .merchecklist td, .merchecklist th {
 .comment-detail {background-color: #EEEEEE; margin: 5px; padding: 0.5em; width:50%;}
 .comment-author, .comment-timestamp {font-style: italic;}
 .comment-remove, .comment-edit {float:right;}
-.editable {border-color: blue; border-style:dotted; border-width:1px;}
+.editable-name {border-color: #2B60DE; border-style:dotted; border-width:2px;}
+.editable-doc {border-color: black; border-style:dotted; border-width:2px;}
+.editable-dvalue {border-color: #3B9C9C; border-style:dotted; border-width:2px;}
 .clear {clear:both;}
 
 .medium_font{ font-size: 87.5%;}

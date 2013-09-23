@@ -1,6 +1,7 @@
 package gov.nasa.jpl.docweb.components;
 
 import gov.nasa.jpl.docweb.concept.Project;
+import gov.nasa.jpl.docweb.services.ProjectService;
 import gov.nasa.jpl.docweb.spring.LocalConnectionFactory;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class HomeController {
 	@Autowired
 	private LocalConnectionFactory<ObjectConnection> connectionFactory;	
 	
+	@Autowired
+	private ProjectService projectService;
+	
 	@RequestMapping(method=RequestMethod.GET)
 	public String home() {
 		return "home";
@@ -44,25 +48,11 @@ public class HomeController {
 		model.addAttribute("groups", auths);
 		return "authtest";
 	}
-
+	
 	@Transactional(readOnly = true)
 	@ModelAttribute
 	public void populateProjects(Model model) throws QueryEvaluationException, RepositoryException {
 		ObjectConnection oc = connectionFactory.getCurrentConnection();
-		addProjects(model, oc);
+		model.addAttribute("projects", projectService.getProjects(oc));
 	}
-	
-	public static void addProjects(Model model, ObjectConnection oc) throws QueryEvaluationException, RepositoryException {
-		List<Map<String, String>> projs = new ArrayList<Map<String, String>>();
-		List<Project> projects = oc.getObjects(Project.class).asList();
-		for (Project p: projects) {
-			Map<String, String> proj = new HashMap<String, String>();
-			proj.put("name", p.getName());
-			proj.put("mdid", p.getMdid());
-			projs.add(proj);
-		}
-		model.addAttribute("projects", projs);
-	}
-	
-	
 }

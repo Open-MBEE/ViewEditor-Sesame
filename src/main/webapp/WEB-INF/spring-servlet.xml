@@ -21,7 +21,7 @@
     <!-- Scans within the base package of the application for @Components to configure as beans -->
     <!-- @Controller, @Service, @Configuration, etc. -->
 
-	<context:component-scan base-package="gov.nasa.jpl.docweb.resources, gov.nasa.jpl.docweb.components" />
+	<context:component-scan base-package="gov.nasa.jpl.docweb.resources, gov.nasa.jpl.docweb.components, gov.nasa.jpl.docweb.services" />
 	 	 
     <!-- Enables the Spring MVC @Controller programming model -->
     <mvc:annotation-driven />

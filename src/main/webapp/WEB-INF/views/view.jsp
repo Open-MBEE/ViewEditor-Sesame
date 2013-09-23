@@ -16,6 +16,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/tiny_mce/tiny_mce.js"></script>
 <script language="javascript" type="text/javascript">
 var curedit = false;
+var addingComment = false;
+var env = window.location.pathname.split('/')[1];
 
 tinyMCE.init({
 	theme : "advanced",
@@ -25,8 +27,8 @@ tinyMCE.init({
     font_size_style_values : "10px,12px,13px,14px,16px,18px,20px",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
-    theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,strikethrough,separator,bullist,numlist,outdent,indent,sup,sub,separator,link,unlink,separator,cleanup,help,separator,code,spellchecker,pastetext,pasteword",
-    theme_advanced_buttons2 : "tablecontrols,backcolor,charmap,separator,image",
+    theme_advanced_buttons1 : "undo,redo,|,bold,italic,underline,strikethrough,|,bullist,numlist,outdent,indent,sup,sub,|,link,unlink,|,cleanup,removeformat,help,|,code,spellchecker,pastetext,pasteword,|,search,replace,preview,|,template_europa",
+    theme_advanced_buttons2 : "styleselect,fontsizeselect,justifyleft,justifycenter,justifyright,justifyfull,|,tablecontrols,|,forecolor,backcolor,charmap,|,image,selectall,",
     theme_advanced_resizing : true,
     entity_encoding:"named",
     entities: "",
@@ -36,24 +38,66 @@ tinyMCE.init({
 	paste_remove_styles : false,
 	paste_remove_styles_if_webkit : false,
     paste_strip_class_attributes: "all",
-    plugins : "autolink,autoresize,paste,table,spellchecker",
+    plugins : "autolink,autoresize,paste,table,spellchecker,searchreplace,preview,template_europa",
     spellchecker_languages : "+English=en-us",
     spellchecker_rpc_url : "${pageContext.request.contextPath}/spellchecker",
     browser_spellcheck: true,
-    valid_elements: "a[href],p,ul,ol,li,sup,sub,table[class|border|cellspacing|cellpadding|frame],tr,td[colspan|rowspan],span[style],th,caption,strong,b,s,i,u,strike,pre,img[src|alt|height|width]",
+    valid_elements: "a[href],p[style],ul,ol,li,sup,sub,table[class|border|cellspacing|cellpadding|frame],tr,td[colspan|rowspan],span[style],th,caption,strong,b,s,i,u,strike,pre,img[src|alt|height|width|style],h1,h2,h3,h4,h5,h6",
     width: '600',
     relative_urls : false,
+    convert_urls : false,
     formats: {
     	italic: {inline: 'i'},
     	bold: {inline: 'strong'},
     	underline: {inline: 'u'},
     	strikethrough: {inline: 's'}
-    }
+    },
+    style_formats : [
+                     {title : 'Header 1', block : 'h1'},
+                     {title : 'Header 2', block : 'h2'},
+                     {title : 'Header 3', block : 'h3'},
+                     {title : 'Header 4', block : 'h4'},
+                     {title : 'Header 5', block : 'h5'},
+                     {title : 'Header 6', block : 'h6'},
+                     {title : 'Paragraph', block : 'p'},
+             ] ,
 });
 
+function inlineImg() {
+	$('.docinput').each(function(index, el) {
+		var eid = $(this).attr('id').split('-')[0];
+		var content = $(this).html();
+		var imglink = "img[src='/" + env + "/images/docgen/" + eid + "_latest.svg']";
+		var imglinks = $(this).find(imglink);
+		if (imglinks.length != 0) {
+			$(imglink).not(imglinks).remove();
+		}
+		if (content.indexOf("[image]") != -1) {
+			$(imglink).remove();
+			$(this).html(content.replace('[image]', '<img src="/' + env + '/images/docgen/' + eid + '_latest.svg"/>'));
+		}
+	});
+}
 
 $(document).ready(function(){
+	$(window).bind('beforeunload', function() {
+		if (curedit) {
+			return "You're currently editing the view!";
+		} else if (addingComment) {
+			return "You're currently editing a comment!";
+		}
+	});
+	$("img[src*='/editor/images/docgen/']").each(function() {
+		var src = $(this).attr('src').replace('editor', env);
+		$(this).attr('src', src);
+	});
+	inlineImg();
+	
 	$('#toggleEdit').click(function() {
+		if (addingComment) {
+			alert("You're currently adding a comment! Save the comment first!");
+			return;
+		}
 		$(".docinput").each(function(index, el) {
 			tinyMCE.execCommand("mceToggleEditor", true, el.id);
 		});
@@ -65,6 +109,7 @@ $(document).ready(function(){
 				$('.' + el.id + "_display").html($(el).val());
 			});
 			$(this).html("Edit");
+			inlineImg();
 		} else {
 		    $(this).html("Preview");
 		}
@@ -141,7 +186,7 @@ $(document).ready(function(){
 			error: function(jqXHR, textStatus, errorThrown) {alert("not saved: " + errorThrown);}
 		});
 	});
-	$('#cancel').click(function() {location.reload();});
+	$('#cancel').click(function() {curedit = false; addingComment = false; location.reload();});
 	$('#docnavwrapper').jstree({
 		"plugins": ["themes", "html_data", "search", "ui"],
 		"core": {
@@ -177,10 +222,16 @@ $(document).ready(function(){
     });
 
 	$('#addComment').click(function() {
+		if (curedit) {
+			alert("You're currently editing the view! Save your view first!");
+			return;
+		}
 		$('#addCommentForm').toggleClass("hidden");
 		tinyMCE.execCommand("mceToggleEditor", true, "addCommentTextArea");
 		$('#addComment').toggleClass("hidden");
+		addingComment = true;
 	});
+	$('#addCommentForm').submit(function() {addingComment = false; return true;});
 	$('.comment-remove').click(function() {
 		var id = $(this).attr('id').split('-')[0];
 		$.ajax({
@@ -209,6 +260,7 @@ $(document).ready(function(){
 		tinyMCE.execCommand("mceToggleEditor", true, id + "-body");
 		$('#'+ id + '-edit-submit').toggleClass('hidden');
 	});
+	
 });
 </script>
 <title>${viewName}</title>
@@ -248,20 +300,22 @@ Search View Name: <input id="docnavsearch" type="text" size="15"/>
 <button id="toggleEdit">Edit</button><button id="save">Save</button><button id="cancel">Cancel</button><span id="lastModified">  Last saved/exported by ${lastUser} at ${lastModified}</span><br/>
 <br/>
 <c:if test="${fn:length(viewDetail) == 0}">
+		<div class="editable editable-doc">
 		<div class="docinput" id="${viewId}-doc"> 
+		</div>
 		</div>
 </c:if>
 <c:forEach var="element" items="${viewDetail}">
 	<c:choose>
 	<c:when test="${element['type'] == 'doc'}">
-		<div class="editable">
+		<div class="editable editable-doc">
 		<div class="docinput" id="${element['mdid']}-doc">
 		${element["documentation"]}
 		</div>
 		</div>
 	</c:when>
 	<c:when test="${element['type'] == 'name'}">
-		<div class="editable">
+		<div class="editable editable-name">
 		<span class="display ${element['mdid']}-name_display">${element["name"]}</span>
 		<c:if test="${element['edit'] == 'true'}">
 		<input class="hidden textinput" id="${element['mdid']}-name" type="text" value="${element['name']}"/>

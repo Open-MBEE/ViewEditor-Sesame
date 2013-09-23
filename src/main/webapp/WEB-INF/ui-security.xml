@@ -11,7 +11,7 @@
     	<intercept-url pattern="/ui/projects/**" access="isAuthenticated()" requires-channel="https" />
     	<intercept-url pattern="/ui/**" access="permitAll" requires-channel="https"/>
     	<intercept-url pattern="/**" access="permitAll" requires-channel="any" />
-        <form-login login-page='/login.jsp' default-target-url='/home' authentication-failure-url='/login.jsp?error=true'/>
+        <form-login login-page='/login.jsp' default-target-url='/ui/' authentication-failure-url='/login.jsp?error=true'/>
     	<logout logout-success-url="/ui/"/>
     	<port-mappings>
     		<port-mapping http="8080" https="8443"/>
@@ -24,13 +24,13 @@
             group-search-base="ou=personnel,dc=dir,dc=jpl,dc=nasa,dc=gov"
             user-search-base="ou=personnel,dc=dir,dc=jpl,dc=nasa,dc=gov"
             user-search-filter="(&amp;(uid={0})(jplusperson=yes))"
-            role-prefix="none" />
+            />
             
-        <authentication-provider>
+       <authentication-provider>
         	<user-service>
             <user name="admin" password="admin" authorities="ROLE_ADMIN" />
         	</user-service>
-    	</authentication-provider>
+    	</authentication-provider> 
     </authentication-manager>
     
     <ldap-server url="ldaps://ldap.jpl.nasa.gov" />
