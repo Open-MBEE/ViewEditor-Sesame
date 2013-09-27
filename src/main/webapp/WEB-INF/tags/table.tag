@@ -32,7 +32,7 @@
 						<div class="editable editable-dvalue">
 						<span class="display ${bodyEntry['mdid']}-dvalue_display">${bodyEntry["dvalue"]}</span>
 						<c:if test="${bodyEntry['edit'] == 'true'}">
-						<input class="hidden textinput" id="${bodyEntry['mdid']}-dvalue" type="text" value="${bodyEntry['dvalue']}" size="10"/>
+						<input class="hidden textinput" id="${bodyEntry['mdid']}-dvalue" type="text" value="${fn:replace(bodyEntry['dvalue'], '"', '&quot;')}" size="10"/>
 						</c:if>
 						</div>
 					</c:when>
