@@ -38,7 +38,7 @@ tinyMCE.init({
 	paste_remove_styles : false,
 	paste_remove_styles_if_webkit : false,
     paste_strip_class_attributes: "all",
-    plugins : "autolink,autoresize,paste,table,spellchecker,searchreplace,preview,template_europa",
+    plugins : "autolink,paste,table,spellchecker,searchreplace,preview,template_europa",
     spellchecker_languages : "+English=en-us",
     spellchecker_rpc_url : "${pageContext.request.contextPath}/spellchecker",
     browser_spellcheck: true,
@@ -61,6 +61,11 @@ tinyMCE.init({
                      {title : 'Header 6', block : 'h6'},
                      {title : 'Paragraph', block : 'p'},
              ] ,
+    setup: function (ed) {
+        ed.onInit.add(function (ed, e) {
+            $(ed.getDoc()).children().attr('style','overflow-y:scroll;');
+        })
+    }
 });
 
 function inlineImg() {
@@ -318,7 +323,7 @@ Search View Name: <input id="docnavsearch" type="text" size="15"/>
 		<div class="editable editable-name">
 		<span class="display ${element['mdid']}-name_display">${element["name"]}</span>
 		<c:if test="${element['edit'] == 'true'}">
-		<input class="hidden textinput" id="${element['mdid']}-name" type="text" value="${element['name']}"/>
+		<textarea class="hidden textinput" id="${element['mdid']}-name" value="${element['name']}"/>
 		</c:if>
 		</div>
 	</c:when>
