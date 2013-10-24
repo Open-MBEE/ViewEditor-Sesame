@@ -323,7 +323,7 @@ Search View Name: <input id="docnavsearch" type="text" size="15"/>
 		<div class="editable editable-name">
 		<span class="display ${element['mdid']}-name_display">${element["name"]}</span>
 		<c:if test="${element['edit'] == 'true'}">
-		<textarea class="hidden textinput" id="${element['mdid']}-name" value="${element['name']}"/>
+		<input class="hidden textinput" id="${element['mdid']}-name" type="text" value="${element['name']}"/>
 		</c:if>
 		</div>
 	</c:when>
