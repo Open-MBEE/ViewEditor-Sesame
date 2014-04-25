@@ -12,7 +12,9 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/styles.css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
-
+<!--[if IE]>
+<script>$(document).ready(function() {alert('This site doesn't support Internet Explorer, please use Firefox, Chrome, or Safari');});</script>
+<![endif]-->
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/tiny_mce/tiny_mce.js"></script>
 <script language="javascript" type="text/javascript">
 var curedit = false;
@@ -38,7 +40,7 @@ tinyMCE.init({
 	paste_remove_styles : false,
 	paste_remove_styles_if_webkit : false,
     paste_strip_class_attributes: "all",
-    plugins : "autolink,autoresize,paste,table,spellchecker,searchreplace,preview,template_europa",
+    plugins : "autolink,paste,table,spellchecker,searchreplace,preview,template_europa",
     spellchecker_languages : "+English=en-us",
     spellchecker_rpc_url : "${pageContext.request.contextPath}/spellchecker",
     browser_spellcheck: true,
@@ -61,6 +63,11 @@ tinyMCE.init({
                      {title : 'Header 6', block : 'h6'},
                      {title : 'Paragraph', block : 'p'},
              ] ,
+    setup: function (ed) {
+        ed.onInit.add(function (ed, e) {
+            $(ed.getDoc()).children().attr('style','overflow-y:scroll;');
+        })
+    }
 });
 
 function inlineImg() {

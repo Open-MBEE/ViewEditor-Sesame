@@ -12,7 +12,9 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/styles.css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
-
+<!--[if IE]>
+<script>$(document).ready(function() {alert('This site doesn't support Internet Explorer, please use Firefox, Chrome, or Safari');});</script>
+<![endif]-->
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/tiny_mce/tiny_mce.js"></script>
 
 
